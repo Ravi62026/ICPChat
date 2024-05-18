@@ -12,6 +12,12 @@ const Navbar = () => {
     const [open, setOpen] = useState(false)
     const [openModal, setOpenModal] = useState(false)
     const { account, userName, connectWallet, createAccount, error  } = useContext(ChatAppContext)
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const userAgent = typeof window.navigator === 'undefined' ? '' : navigator.userAgent;
+        setIsMobile(/iPhone|iPad|iPod|Android/i.test(userAgent));
+    }, []);
 
     const menuItems = [
         {
@@ -84,7 +90,7 @@ const Navbar = () => {
                             </div>
                         )}
 
-                        <div className={Style.Navbar_box_right_connect}>
+                        {/* <div className={Style.Navbar_box_right_connect}>
                             {account == "" ? (
                                 <button onClick={()=>connectWallet()}>
                                     {""}
@@ -101,6 +107,30 @@ const Navbar = () => {
                                     />
                                     {""}
                                     <small>{userName || "Create Account" }</small>
+                                </button>
+                            )}
+                        </div> */}
+
+                        <div className={Style.Navbar_box_right_connect}>
+                            {account === "" ? (
+                                isMobile ? (
+                                    <button className="connectBTN">
+                                        <a href="https://metamask.app.link/dapp/https://icp-chat.vercel.app/">Click For Mobile</a>
+                                    </button>
+                                ) : (
+                                    <button onClick={() => connectWallet()}>
+                                        <span>Connect Wallet</span>
+                                    </button>
+                                )
+                            ) : (
+                                <button onClick={() => setOpenModal(true)}>
+                                    <Image
+                                        src={userName ? images.accountName : images.create2}
+                                        alt="Account image"
+                                        width={20}
+                                        height={20}
+                                    />
+                                    <small>{userName || "Create Account"}</small>
                                 </button>
                             )}
                         </div>
